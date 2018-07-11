@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    include:
+      - "default"
+  data:
+    elasticsearch:
+      cluster-nodes: "localhost:9300"
+      cluster-name: "elasticsearch"
+
+logging:
+  level:
+    nl.playground.demo.elasticsearch.client: DEBUG
+
+management:
+  endpoint:
+    logfile:
+      external-file: "logs/bankservice.log"
