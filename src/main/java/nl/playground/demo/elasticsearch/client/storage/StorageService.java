@@ -11,4 +11,6 @@ public interface StorageService {
     BankAccount getBankAccount(String id);
 
     BankAccount save(BankAccount bankAccount);
+
+    void createIndex(String name);
 }

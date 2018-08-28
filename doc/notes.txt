@@ -1,0 +1,18 @@
+
+curl -H "Content-Type: application/json" -XPOST "localhost:9200/bank/_doc/_bulk?pretty&refresh" --data-binary "@accounts.json"
+
+
+select 'insert into bank_account (id, account_number, balance, firstname, lastname, age, gender, address, employer, email, city, state) values ((select bat_seq.nextval), '
+ || account_number
+ || ', ' || balance
+ || ', ' || chr(39) || firstname || chr(39)
+ || ', ' || chr(39) || lastname || chr(39)
+ || ', ' || age
+ || ', ' || chr(39) || gender || chr(39)
+ || ', ' || chr(39) || address || chr(39)
+ || ', ' || chr(39) || employer || chr(39)
+ || ', ' || chr(39) || email || chr(39)
+ || ', ' || chr(39) || city || chr(39)
+ || ', ' || chr(39) || state || chr(39)
+ || ');'
+from bank_account;
