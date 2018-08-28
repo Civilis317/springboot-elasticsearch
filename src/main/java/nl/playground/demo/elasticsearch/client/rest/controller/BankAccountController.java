@@ -69,8 +69,8 @@ public class BankAccountController extends AbstractController {
 //        return elasticsearchStorageService.getAllBankAccounts();
 
         // 180 ms:
-        //return elasticsearchStorageService.saveAll(databaseStorageService.streamAllBankAccounts());
-        return elasticsearchStorageService.saveAll(databaseStorageService.streamSelected(STATE_OK, BALANCE_10K));
+        return elasticsearchStorageService.saveAll(databaseStorageService.streamAllBankAccounts());
+//        return elasticsearchStorageService.saveAll(databaseStorageService.streamSelected(STATE_OK, BALANCE_10K));
     }
 
     @GetMapping(value = "/elasticsearch/index/create")
