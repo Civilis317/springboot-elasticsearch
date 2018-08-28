@@ -1,6 +1,7 @@
 package nl.playground.demo.elasticsearch.client.elasticsearch;
 
 import nl.playground.demo.elasticsearch.client.rest.model.BankAccount;
+import nl.playground.demo.elasticsearch.client.rest.model.BaseTrademark;
 import nl.playground.demo.elasticsearch.client.storage.StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,8 +55,6 @@ public class ElasticsearchStorageService implements StorageService {
         return manager.saveAll(bankAccountStream);
     }
 
-
-
     public Iterable<BankAccount> getAllMales() {
         return manager.findByGender("M");
     }
@@ -72,4 +71,7 @@ public class ElasticsearchStorageService implements StorageService {
         return manager.addressLikeQuery(address);
     }
 
+    public Iterable<BaseTrademark> saveTrademarks(List<BaseTrademark> trademarkList) {
+        return manager.saveTrademarkStream(trademarkList.stream());
+    }
 }

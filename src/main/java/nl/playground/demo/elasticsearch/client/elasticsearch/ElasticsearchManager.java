@@ -1,6 +1,7 @@
 package nl.playground.demo.elasticsearch.client.elasticsearch;
 
 import nl.playground.demo.elasticsearch.client.rest.model.BankAccount;
+import nl.playground.demo.elasticsearch.client.rest.model.BaseTrademark;
 import nl.playground.demo.elasticsearch.client.storage.DocumentNotFoundException;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -13,30 +14,36 @@ import java.util.stream.StreamSupport;
 @Service
 public class ElasticsearchManager {
 
-    private final ElasticsearchBankRepository repository;
+    private final ElasticsearchBankRepository bankRepository;
+    private final ElasticsearchTrademarkRepository trademarkRepository;
 
-    public ElasticsearchManager(ElasticsearchBankRepository repository) {
-        this.repository = repository;
+    public ElasticsearchManager(ElasticsearchBankRepository bankRepository, ElasticsearchTrademarkRepository trademarkRepository) {
+        this.bankRepository = bankRepository;
+        this.trademarkRepository = trademarkRepository;
     }
 
     public Stream<BankAccount> getAllBankAccounts() {
-        return StreamSupport.stream(repository.findAll().spliterator(), true);
+        return StreamSupport.stream(bankRepository.findAll().spliterator(), true);
     }
 
     public BankAccount getBankAccount(String id) {
-        return repository.findById(id).orElseThrow(() -> new DocumentNotFoundException("Record not found for id: " + id));
+        return bankRepository.findById(id).orElseThrow(() -> new DocumentNotFoundException("Record not found for id: " + id));
     }
 
     public BankAccount save(BankAccount bankAccount) {
-        return repository.save(bankAccount);
+        return bankRepository.save(bankAccount);
     }
 
     public Iterable<BankAccount> saveAll(Stream<BankAccount> bankAccountStream) {
-        return repository.saveAll(bankAccountStream.collect(Collectors.toList()));
+        return bankRepository.saveAll(bankAccountStream.collect(Collectors.toList()));
+    }
+
+    public Iterable<BaseTrademark> saveTrademarkStream(Stream<BaseTrademark> trademarkStream) {
+        return trademarkRepository.saveAll(trademarkStream.collect(Collectors.toList()));
     }
 
     public Iterable<BankAccount> findByGender(String gender) {
-        return repository.search(QueryBuilders.matchQuery("gender", gender));
+        return bankRepository.search(QueryBuilders.matchQuery("gender", gender));
     }
 
     public Iterable<BankAccount> getRichYoungFemales() {
@@ -51,12 +58,12 @@ public class ElasticsearchManager {
                 .must(
                         QueryBuilders.rangeQuery("balance").gte(34000)
                 );
-        return repository.search(query);
+        return bankRepository.search(query);
     }
 
     public Iterable<BankAccount> addressLikeQuery(String addressPart) {
         QueryBuilder query = QueryBuilders.wildcardQuery("address", addressPart);
-        return repository.search(query);
+        return bankRepository.search(query);
     }
 
 

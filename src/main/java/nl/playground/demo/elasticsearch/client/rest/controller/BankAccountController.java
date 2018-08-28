@@ -2,11 +2,15 @@ package nl.playground.demo.elasticsearch.client.rest.controller;
 
 import nl.playground.demo.elasticsearch.client.database.DatabaseStorageService;
 import nl.playground.demo.elasticsearch.client.elasticsearch.ElasticsearchStorageService;
+import nl.playground.demo.elasticsearch.client.rest.model.Address;
 import nl.playground.demo.elasticsearch.client.rest.model.BankAccount;
+import nl.playground.demo.elasticsearch.client.rest.model.BaseTrademark;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -102,6 +106,46 @@ public class BankAccountController extends AbstractController {
     public @ResponseBody
     Iterable<BankAccount> findByAddress(@PathVariable(name = "address") String address) {
         return elasticsearchStorageService.findByAddress(address);
+    }
+
+    @GetMapping(value = "/elasticsearch/create-tm-index")
+    public @ResponseBody Iterable<BaseTrademark> createTrademarkIndex() {
+        return elasticsearchStorageService.saveTrademarks(generateTrademarks());
+    }
+
+    private List<BaseTrademark> generateTrademarks() {
+        List<BaseTrademark> trademarkList = new ArrayList<>(16);
+
+        BaseTrademark btm = new BaseTrademark();
+        btm.setRegistrationNumber("6096");
+        btm.setFilingDateTime(new Date());
+        btm.setExpirationDate(new Date());
+
+        Address holder = new Address();
+        holder.setName("Surinaamse Brouwerij N.V. ");
+        holder.setStreet("Brouwerijweg");
+        holder.setNumber("1");
+        holder.setCity("Paramaribo");
+        holder.setCountry("Suriname");
+        btm.setHolder(holder);
+
+        Address representative = new Address();
+        representative.setName("G.B. Steward VanEps Kunneman VanDoorne");
+        representative.setStreet("Harbour View Office Complex B unit 15, Sparrow Road 4, P.O. Box 494");
+        representative.setNumber("15");
+        representative.setCity("Philipsburg");
+        representative.setCountry("Sint Maarten");
+        representative.setWebsite("http://www.ekvandoorne.com");
+        btm.setRepresentative(representative);
+
+        btm.setPublicationDate(new Date());
+        btm.setFilingDateRenewal(new Date());
+        btm.setFilingDateRenewal(new Date());
+        btm.setStatus("Trademark registered");
+
+        trademarkList.add(btm);
+
+        return trademarkList;
     }
 
 }
